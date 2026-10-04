@@ -1,0 +1,9 @@
+node_modules/
+docs_dev/
+.agent/
+*.log
+.env
+.DS_Store
+
+.claude/
+package-lock.json

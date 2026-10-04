@@ -1,0 +1,94 @@
+{
+  "name": "openclaw-fb-messenger",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Facebook Messenger channel plugin for OpenClaw — webhook inbound + Graph API outbound, AI handled by the OpenClaw agent. Enhanced fork: inbound media (image/audio) understanding, WhatsApp escalation relay, outbound images.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "author": "tuanminhole",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wfy0406/openclaw-fb-messenger.git"
+  },
+  "homepage": "https://github.com/wfy0406/openclaw-fb-messenger#readme",
+  "bugs": {
+    "url": "https://github.com/wfy0406/openclaw-fb-messenger/issues"
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "channel",
+    "facebook",
+    "messenger",
+    "fb-messenger",
+    "chatbot",
+    "cskh"
+  ],
+  "files": [
+    "dist",
+    "openclaw.plugin.json",
+    "logo.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "check": "tsc --noEmit && node --check dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "runtimeExtensions": [
+      "./dist/index.js"
+    ],
+    "setupEntry": "./dist/setup-entry.js",
+    "runtimeSetupEntry": "./dist/setup-entry.js",
+    "channel": {
+      "id": "fb-messenger",
+      "label": "Facebook Messenger",
+      "selectionLabel": "Facebook (Messenger)",
+      "docsPath": "/channels/fb-messenger",
+      "docsLabel": "fb-messenger",
+      "blurb": "Facebook Page Messenger via webhook + Graph API.",
+      "aliases": [
+        "fb",
+        "messenger"
+      ],
+      "order": 90,
+      "quickstartAllowFrom": false
+    },
+    "install": {
+      "clawhubSpec": "wfy0406/openclaw-fb-messenger",
+      "defaultChoice": "clawhub",
+      "minHostVersion": ">=2026.6.10"
+    },
+    "compat": {
+      "pluginApi": ">=2026.6.10",
+      "minGatewayVersion": "2026.6.10"
+    },
+    "build": {
+      "entry": "./dist/index.js",
+      "openclawVersion": "2026.6.10",
+      "pluginSdkVersion": "2026.6.10"
+    },
+    "release": {
+      "publishToClawHub": false,
+      "publishToNpm": false
+    }
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.6.10"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "openclaw": "2026.7.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  }
+}

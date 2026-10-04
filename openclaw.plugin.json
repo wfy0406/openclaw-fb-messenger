@@ -1,0 +1,266 @@
+{
+  "id": "fb-messenger",
+  "name": "Facebook Messenger",
+  "description": "OpenClaw Facebook Messenger channel plugin via webhook + Graph API. Enhanced: inbound image/voice understanding, WhatsApp escalation relay, outbound images.",
+  "version": "0.2.0",
+  "activation": {
+    "onStartup": false
+  },
+  "channels": [
+    "fb-messenger"
+  ],
+  "channelEnvVars": {
+    "fb-messenger": [
+      "FB_MESSENGER_PAGE_ACCESS_TOKEN",
+      "FB_MESSENGER_APP_ID",
+      "FB_MESSENGER_APP_SECRET",
+      "FB_MESSENGER_VERIFY_TOKEN",
+      "FB_MESSENGER_ESCALATE_TO",
+      "FB_MESSENGER_ESCALATE_CHANNEL",
+      "FB_MESSENGER_ESCALATE_MODE",
+      "FB_MESSENGER_ESCALATE_ACCOUNT_ID",
+      "FB_MESSENGER_AUDIO_LANGUAGE"
+    ]
+  },
+  "setup": {
+    "providers": [
+      {
+        "id": "fb-messenger",
+        "channel": "fb-messenger",
+        "envVars": [
+          "FB_MESSENGER_PAGE_ACCESS_TOKEN",
+          "FB_MESSENGER_APP_ID",
+          "FB_MESSENGER_APP_SECRET",
+          "FB_MESSENGER_VERIFY_TOKEN"
+        ]
+      }
+    ]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "channelConfigs": {
+    "fb-messenger": {
+      "label": "Facebook Messenger",
+      "description": "Facebook Page Messenger via webhook + Graph API.",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "pageId": {
+            "type": "string",
+            "description": "Facebook Page ID this account answers for."
+          },
+          "pageAccessToken": {
+            "type": "string",
+            "description": "Page Access Token, or any User token (the plugin auto-exchanges it for a permanent Page token). Prefer env FB_MESSENGER_PAGE_ACCESS_TOKEN."
+          },
+          "appId": {
+            "type": "string",
+            "description": "Meta App ID. Needed to exchange a short-lived token into a never-expiring Page token. Prefer env FB_MESSENGER_APP_ID."
+          },
+          "appSecret": {
+            "type": "string",
+            "description": "Meta App Secret for X-Hub-Signature-256 verification. Prefer env FB_MESSENGER_APP_SECRET."
+          },
+          "verifyToken": {
+            "type": "string",
+            "description": "Webhook verify token (you choose this). Prefer env FB_MESSENGER_VERIFY_TOKEN."
+          },
+          "graphApiVersion": {
+            "type": "string",
+            "description": "Graph API version. Defaults to v21.0."
+          },
+          "dmPolicy": {
+            "type": "string",
+            "enum": [
+              "pairing",
+              "allowlist",
+              "open",
+              "disabled"
+            ],
+            "default": "open"
+          },
+          "allowFrom": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "historyLimit": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "markdown": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tables": {
+                "type": "string",
+                "enum": [
+                  "off",
+                  "bullets",
+                  "code",
+                  "block"
+                ]
+              }
+            }
+          },
+          "messagePrefix": {
+            "type": "string"
+          },
+          "responsePrefix": {
+            "type": "string"
+          },
+          "mediaEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Download inbound attachments (image/audio/video/file) so the agent can see them. Default true."
+          },
+          "audioTranscriptionEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Transcribe inbound voice messages (Cantonese-first). Default true."
+          },
+          "audioLanguage": {
+            "type": "string",
+            "default": "yue",
+            "description": "Transcription language hint. Default 'yue' (Cantonese). Prefer env FB_MESSENGER_AUDIO_LANGUAGE."
+          },
+          "audioTranscriptionDailyCap": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 200,
+            "description": "Max audio transcriptions per day. Default 200."
+          },
+          "escalateChannel": {
+            "type": "string",
+            "default": "whatsapp",
+            "description": "Channel used for problem-escalation relay. Default 'whatsapp'. Prefer env FB_MESSENGER_ESCALATE_CHANNEL."
+          },
+          "escalateTo": {
+            "type": "string",
+            "description": "Boss target id on the escalation channel (e.g. WhatsApp '8529XXXXXXX'). Empty = escalation disabled. Prefer env FB_MESSENGER_ESCALATE_TO."
+          },
+          "escalateAccountId": {
+            "type": "string",
+            "description": "Account id on the escalation channel (multi-account setups only). The Messenger accountId is never passed across. Prefer env FB_MESSENGER_ESCALATE_ACCOUNT_ID."
+          },
+          "escalateMode": {
+            "type": "string",
+            "enum": [
+              "off",
+              "agent",
+              "media",
+              "all"
+            ],
+            "default": "off",
+            "description": "off=never; agent=AI decides via a Cantonese system hint (recommended); media=forward every customer photo/file/video; all=forward every message. Prefer env FB_MESSENGER_ESCALATE_MODE."
+          },
+          "defaultAccount": {
+            "type": "string"
+          },
+          "accounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "pageId": {
+                  "type": "string"
+                },
+                "pageAccessToken": {
+                  "type": "string"
+                },
+                "appId": {
+                  "type": "string"
+                },
+                "appSecret": {
+                  "type": "string"
+                },
+                "verifyToken": {
+                  "type": "string"
+                },
+                "graphApiVersion": {
+                  "type": "string"
+                },
+                "dmPolicy": {
+                  "type": "string",
+                  "enum": [
+                    "pairing",
+                    "allowlist",
+                    "open",
+                    "disabled"
+                  ]
+                },
+                "allowFrom": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "historyLimit": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "messagePrefix": {
+                  "type": "string"
+                },
+                "responsePrefix": {
+                  "type": "string"
+                },
+                "mediaEnabled": {
+                  "type": "boolean"
+                },
+                "audioTranscriptionEnabled": {
+                  "type": "boolean"
+                },
+                "audioLanguage": {
+                  "type": "string"
+                },
+                "audioTranscriptionDailyCap": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "escalateChannel": {
+                  "type": "string"
+                },
+                "escalateTo": {
+                  "type": "string"
+                },
+                "escalateAccountId": {
+                  "type": "string"
+                },
+                "escalateMode": {
+                  "type": "string",
+                  "enum": [
+                    "off",
+                    "agent",
+                    "media",
+                    "all"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
